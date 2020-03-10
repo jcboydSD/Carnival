@@ -10,7 +10,7 @@ package carnival;
  * prizes using Arrays, ArrayLists, switch, for-each, and random numbers
  *****************************************************************************/
 
-import java.util.*; //Scanner, ArrayList
+import java.util.*; //Scanner
 
 public class Carnival 
 {
@@ -24,6 +24,7 @@ public class Carnival
         Food[] foods = new Food[4]; //array for 4 foods
         int activityAnswer;
         int foodAnswer;
+        int handNumber;
         boolean playAgain = true;
         String prizeWon;
         //call methods to populate arrays with data
@@ -36,8 +37,10 @@ public class Carnival
         customer.setName(stdIn.nextLine());
         do 
         {
-            prizeWon = "none";
-            activityAnswer = activityMenu(customer.getTickets());
+            prizeWon = "none"; //reset value each loop
+            //display number of tickets, menu, and get user activity choice
+            activityAnswer = activityChoice(customer.getTickets());
+            //select activities based on user choice
             switch (activityAnswer)
             {
                 case 1: case 2: case 3: //play games
@@ -49,9 +52,9 @@ public class Carnival
                         //customer plays game and gets result
                         prizeWon = games[activityAnswer - 1].playGame(); //play
                     }
-                    else
+                    else //when not enough tickets for game
                     {
-                        shortGameTickets();
+                        System.out.println("You don't have enough tickets for this game.");
                     }
                     break;
                 case 4: //buy more tickets
@@ -62,7 +65,7 @@ public class Carnival
                     break;
                 case 5: case 6: //go on rides
                     //customer checks pockets for tickets
-                    if (customer.checkTickets(rides[activityAnswer - 5].getTicketPrice())) //check customer pocket for tickets
+                    if (customer.checkTickets(rides[activityAnswer - 5].getTicketPrice())) 
                     {
                         //customer pays tickets for selected ride
                         customer.spendTickets(rides[activityAnswer - 5].getTicketPrice());
@@ -70,17 +73,17 @@ public class Carnival
                         System.out.printf("Enjoy the %s ride!\n",   
                                 rides[activityAnswer - 5].getName());
                     }
-                    else
+                    else //when not enough tickets for ride
                     {
-                        shortRideTickets();
+                        System.out.println("You don't have enough tickets for this ride.");
                     }
                     break;
                 case 7: //buy foods
-                    // customer checks pockets for tickets and for available hand
+                    // customer checks pockets for tickets and checks for available hand
                     foodAnswer = foodChoice();
                     if (customer.checkTickets(foods[foodAnswer].getTicketPrice())
                             && customer.availableHand()) 
-                    {
+                    { //when enough tickets and available hand
                         //customer pays tickets for selected food
                         customer.spendTickets(foods[foodAnswer].getTicketPrice());
                         //customer takes food in hand
@@ -88,32 +91,40 @@ public class Carnival
                         System.out.printf("Enjoy your %s!\n", foods[foodAnswer].getName());
                     }
                     else if (customer.checkTickets(foods[foodAnswer].getTicketPrice()))
-                    {
-                        shortFoodTickets();
+                    { //when enough tickets, but no available hand
+                        System.out.println("You don't have enough hands!");
                     }
                     else
-                    {
-                        System.out.println("You don't have enough hands!");
+                    { //when not enough tickets (available hand is irrelevant)
+                        System.out.println("You don't have enough tickets for this food.");
                     }
                     break;
                 case 8: //eat food
-                    //customer checks for food in hands
-                    if (customer.getLeftHand().equals("empty") && customer.getRightHand().equals("empty"))
+                    //customer checks for food in both hands
+                    if (customer.getLeftHand().equals("empty") 
+                            && customer.getRightHand().equals("empty"))
                     {
                         System.out.println("You don't have any food to eat!");
                     }
                     else
                     {
-                        System.out.printf("1. %8s 2. %s", 
+                        System.out.printf("1. %-12s 2. %-12s\n", 
                                 customer.getLeftHand(), customer.getRightHand());
-                        System.out.print("Which one do you want to consume? ");
-                        customer.eatFood(stdIn.nextInt());
-                    }
+                        do
+                        {
+                            System.out.print("Which one do you want to consume? ");
+                            handNumber = stdIn.nextInt() - 1;
+                        } while (handNumber < 0 | handNumber > 1); //check for valid input
+                        customer.eatFood(handNumber);
+                    } //end if
                     break;
-                case 9: playAgain = false; break; //leave Carnival
+                case 9: //leave Carnival 
+                    playAgain = false;
+                    break; 
                 default: 
                     System.out.println("Please enter a valid option");
             } //end switch
+            //add prize to backpack if prize exists
             if (!prizeWon.equals("sorry, no prize") && !prizeWon.equals("none"))
             {
                 customer.addPrize(prizeWon);
@@ -123,21 +134,17 @@ public class Carnival
         //exit Carnival
         System.out.printf("\nAll Done! Hope you had a great time, %s\n", 
                 customer.getName());
-        if (!customer.backpack.isEmpty())
+        if (!customer.backpackEmpty())
         {
             System.out.println("You won these prizes:");
-            for (String obj : customer.backpack)
-            {
-                System.out.println(obj);
-            } //end for each
+            System.out.println(customer.getPrizes());
         } //end if
     } //end main
     
-    //ADDITIONAL METHODS*******************************************************
+    //additional methods ******************************************************
     
     public static void gameSetup(Game[] games)
     {
-        //Game[] games = new Game[3];
         games[0] = new Game("water shooter", 4, 
                 "stuffed bear", "plastic bear", "bear key chain");
         games[1] = new Game("balloon dart Toss", 4, 
@@ -160,7 +167,7 @@ public class Carnival
         foods[3] = new Food("cotton candy", 5);          
     } //end foodSetup
     
-    public static int activityMenu(int tickets)
+    public static int activityChoice(int tickets)
     {
         Scanner stdIn = new Scanner(System.in);
         System.out.printf("\nYou have %d tickets\n", tickets);
@@ -173,7 +180,7 @@ public class Carnival
         int activityAnswer = stdIn.nextInt();
         stdIn.nextLine(); //flush new line
         return activityAnswer;
-    } //end activityMenu
+    } //end activityChoice
     
     public static int foodChoice()
     {
@@ -187,23 +194,8 @@ public class Carnival
             System.out.print("Which one do you want? ");
             choice = stdIn.nextInt();
             stdIn.nextLine(); //flush new line
-        } while (choice < 1 && choice > 4);
+        } while (choice < 1 && choice > 4); //check for valid input
         return choice - 1;
-    } //end foodMenu
+    } //end foodChoice
     
-    public static void shortRideTickets()
-    {
-        System.out.println("You don't have enough tickets for this ride.");
-    } //end shortRideTickets
-    
-    public static void shortGameTickets()
-    {
-        System.out.println("You don't have enough tickets for this game.");
-    } //end shortGameTickets
-    
-    public static void shortFoodTickets()
-    {
-        System.out.println("You don't have enough tickets for this food.");
-    } //end shortFoodTickets
-   
 } //end class Carnival
