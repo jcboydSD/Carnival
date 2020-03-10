@@ -48,9 +48,8 @@ public class Game
         return prize3;
     } //end getPrize3
     
-    public void playGame()
+    public String playGame()
     {
-        //XXXXXXXXXcustomer pays for ticketXXXXXXXXX
         int result = (int)(Math.random() * 4 + 1);
         String prize;
         switch (result)
@@ -58,10 +57,10 @@ public class Game
             case 1: prize = getPrize1(); break;
             case 2: prize = getPrize2(); break;
             case 3: prize = getPrize3(); break;
-            default: prize = "sorry, no prize"; break;
+            default: prize = "sorry, no prize";
         }
         System.out.printf("Playing %s, and the result is: %s\n", name, prize);
-        //ADD PRIZE TO BACKPACK
+        return prize;
     } //end playGame
 
 } //end class Game
