@@ -97,15 +97,8 @@ public class Customer
     
     public void eatFood(int handNumber)
     {
-        if (hands[handNumber].equals("empty"))
-        {
-            System.out.println("There's nothing in that hand!");
-        }
-        else
-        {
-            System.out.printf("Yummm! That %s was good!\n", hands[handNumber]);
-            hands[handNumber] = "empty";
-        } //end if
+        System.out.printf("Yummm! That %s was good!\n", hands[handNumber]);
+        hands[handNumber] = "empty";
     } //end eatFood
     
     public boolean availableHand()

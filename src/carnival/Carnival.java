@@ -114,6 +114,16 @@ public class Carnival
                         {
                             System.out.print("Which one do you want to consume? ");
                             handNumber = stdIn.nextInt() - 1;
+                            if (handNumber < 0 | handNumber > 1)
+                            {
+                                System.out.println("Please enter a valid option");
+                            }
+                            else if ((handNumber == 0 && customer.getLeftHand().equals("empty"))
+                                | (handNumber == 1 && customer.getRightHand().equals("empty")))
+                            {
+                                System.out.println("There's nothing in that hand!");
+                                handNumber = - 1; //to force loop repeat
+                            } //end if
                         } while (handNumber < 0 | handNumber > 1); //check for valid input
                         customer.eatFood(handNumber);
                     } //end if
