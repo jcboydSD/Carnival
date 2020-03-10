@@ -50,6 +50,7 @@ public class Game
     
     public void playGame()
     {
+        //XXXXXXXXXcustomer pays for ticketXXXXXXXXX
         int result = (int)(Math.random() * 4 + 1);
         String prize;
         switch (result)
@@ -60,7 +61,7 @@ public class Game
             default: prize = "sorry, no prize"; break;
         }
         System.out.printf("Playing %s, and the result is: %s\n", name, prize);
-        //XXXXXXXXXput prize in customer backpackXXXXXXXXX
+        //ADD PRIZE TO BACKPACK
     } //end playGame
 
 } //end class Game
