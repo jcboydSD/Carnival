@@ -23,6 +23,7 @@ public class Carnival
         Ride[] rides = new Ride[2]; //array for 2 rides
         Food[] foods = new Food[4]; //array for 4 foods
         int activityAnswer;
+        int foodAnswer;
         boolean playAgain = true;
         String prizeWon;
         //call methods to populate arrays with data
@@ -31,7 +32,7 @@ public class Carnival
         foodSetup(foods);
         //output
         System.out.println("Final Project by JC Boyd\n");
-        System.out.print("Welcome to the Carnival!\n What is your name? ");
+        System.out.print("Welcome to the Carnival!\nWhat is your name? ");
         customer.setName(stdIn.nextLine());
         do 
         {
@@ -66,7 +67,7 @@ public class Carnival
                         //customer pays tickets for selected ride
                         customer.spendTickets(rides[activityAnswer - 5].getTicketPrice());
                         //customer goes on ride
-                        System.out.printf("Enjoy the %s ride!",   
+                        System.out.printf("Enjoy the %s ride!\n",   
                                 rides[activityAnswer - 5].getName());
                     }
                     else
@@ -76,15 +77,17 @@ public class Carnival
                     break;
                 case 7: //buy foods
                     // customer checks pockets for tickets and for available hand
-                    if (customer.checkTickets(foods[foodChoice() - 1].getTicketPrice())
-                            && customer.checkHands()) 
+                    foodAnswer = foodChoice();
+                    if (customer.checkTickets(foods[foodAnswer].getTicketPrice())
+                            && customer.availableHand()) 
                     {
                         //customer pays tickets for selected food
-                        customer.spendTickets(foods[foodChoice() - 1].getTicketPrice());
+                        customer.spendTickets(foods[foodAnswer].getTicketPrice());
                         //customer takes food in hand
-                        customer.holdFood(foods[foodChoice() - 1].getName());
+                        customer.holdFood(foods[foodAnswer].getName());
+                        System.out.printf("Enjoy your %s!\n", foods[foodAnswer].getName());
                     }
-                    else if (customer.checkTickets(foods[foodChoice() - 1].getTicketPrice()))
+                    else if (customer.checkTickets(foods[foodAnswer].getTicketPrice()))
                     {
                         shortFoodTickets();
                     }
@@ -118,7 +121,7 @@ public class Carnival
         } while (playAgain); //end do while
         
         //exit Carnival
-        System.out.printf("All Done! Hope you had a good time, %s", 
+        System.out.printf("\nAll Done! Hope you had a great time, %s\n", 
                 customer.getName());
         if (!customer.backpack.isEmpty())
         {
@@ -135,18 +138,18 @@ public class Carnival
     public static void gameSetup(Game[] games)
     {
         //Game[] games = new Game[3];
-        games[0] = new Game("Water Shooter", 4, 
+        games[0] = new Game("water shooter", 4, 
                 "stuffed bear", "plastic bear", "bear key chain");
-        games[1] = new Game("Balloon Dart Toss", 4, 
+        games[1] = new Game("balloon dart Toss", 4, 
                 "stuffed tiger", "plastic tiger", "tiger key chain");
-        games[2] = new Game("Ring Toss", 4, 
+        games[2] = new Game("ring toss", 4, 
                 "stuffed pig", "plastic pig", "pig key chain");
     } //end gameSetup
     
     public static void rideSetup(Ride[] rides)
     {
-        rides[0] = new Ride("Ferris Wheel", 6);
-        rides[1] = new Ride("Carousel", 6);
+        rides[0] = new Ride("ferris wheel", 6);
+        rides[1] = new Ride("carousel", 6);
     } //end rideSetup
     
     public static void foodSetup(Food[] foods)
@@ -160,13 +163,13 @@ public class Carnival
     public static int activityMenu(int tickets)
     {
         Scanner stdIn = new Scanner(System.in);
-        System.out.printf("\nYou have %d tickets", tickets);
-        System.out.println("1. Water Shooter\t5. Ferris Wheel");
-        System.out.println("2. Balloon Dart Toss\t6. Carousel");
-        System.out.println("3. Ring Toss\t7. Get Food");
-        System.out.println("4. Add Tickets\t8. Eat Food");
-        System.out.println("9. Exit Carnival");
-        System.out.print("What do you want to do?");
+        System.out.printf("\nYou have %d tickets\n", tickets);
+        System.out.printf("%-25s%s\n", "1. Water Shooter", "5. Ferris Wheel");
+        System.out.printf("%-25s%s\n", "2. Balloon Dart Toss", "6. Carousel");
+        System.out.printf("%-25s%s\n", "3. Ring Toss", "7. Get Food");
+        System.out.printf("%-25s%s\n", "4. Add Tickets", "8. Eat Food");
+        System.out.printf("%-25s\n", "9. Exit Carnival");
+        System.out.print("What do you want to do? ");
         int activityAnswer = stdIn.nextInt();
         stdIn.nextLine(); //flush new line
         return activityAnswer;
@@ -175,23 +178,27 @@ public class Carnival
     public static int foodChoice()
     {
         Scanner stdIn = new Scanner(System.in);
+        int choice;
         System.out.println("Food choices");
         System.out.println("1. Drink\t3. Popcorn");
         System.out.println("2. Hot Dog\t4. Cotton Candy");
-        System.out.print("Which one do you want? ");
-        int foodAnswer = stdIn.nextInt();
-        stdIn.nextLine(); //flush new line
-        return foodAnswer;
+        do 
+        {
+            System.out.print("Which one do you want? ");
+            choice = stdIn.nextInt();
+            stdIn.nextLine(); //flush new line
+        } while (choice < 1 && choice > 4);
+        return choice - 1;
     } //end foodMenu
     
     public static void shortRideTickets()
     {
-        System.out.println("You don't have enough tickets for this game.");
+        System.out.println("You don't have enough tickets for this ride.");
     } //end shortRideTickets
     
     public static void shortGameTickets()
     {
-        System.out.println("You don't have enough tickets for this ride.");
+        System.out.println("You don't have enough tickets for this game.");
     } //end shortGameTickets
     
     public static void shortFoodTickets()
