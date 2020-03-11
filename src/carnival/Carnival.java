@@ -35,6 +35,7 @@ public class Carnival
         System.out.println("Final Project by JC Boyd\n");
         System.out.print("Welcome to the Carnival!\nWhat is your name? ");
         customer.setName(stdIn.nextLine());
+        //do while game loop
         do 
         {
             prizeWon = "none"; //reset value each loop
@@ -100,32 +101,42 @@ public class Carnival
                     }
                     break;
                 case 8: //eat food
-                    //customer checks for food in both hands
+                    //customer checks for food currently in hands
+                    int lowerBound = 1, upperBound = 2;
                     if (customer.getLeftHand().equals("empty") 
                             && customer.getRightHand().equals("empty"))
                     {
                         System.out.println("You don't have any food to eat!");
                     }
-                    else
-                    {
-                        System.out.printf("1. %-12s 2. %-12s\n", 
+                    else 
+                    {    
+                        if (customer.getLeftHand().equals("empty"))
+                        {
+                            System.out.printf("2. %-12s\n", customer.getRightHand());
+                            lowerBound = 2; //adjust for input validation 
+                        }
+                        else if (customer.getRightHand().equals("empty"))
+                        {
+                            System.out.printf("1. %-12s\n", customer.getLeftHand());
+                            upperBound = 1; //adjust for input validation
+                        }
+                        else
+                        {
+                            System.out.printf("1. %-12s 2. %-12s\n", 
                                 customer.getLeftHand(), customer.getRightHand());
+                        } //end if
                         do
                         {
                             System.out.print("Which one do you want to consume? ");
-                            handNumber = stdIn.nextInt() - 1;
-                            if (handNumber < 0 | handNumber > 1)
+                            handNumber = stdIn.nextInt();
+                            //validate entry, repeat if invalid
+                            if (handNumber < lowerBound | handNumber > upperBound)
                             {
                                 System.out.println("Please enter a valid option");
-                            }
-                            else if ((handNumber == 0 && customer.getLeftHand().equals("empty"))
-                                | (handNumber == 1 && customer.getRightHand().equals("empty")))
-                            {
-                                System.out.println("There's nothing in that hand!");
-                                handNumber = - 1; //to force loop repeat
                             } //end if
-                        } while (handNumber < 0 | handNumber > 1); //check for valid input
-                        customer.eatFood(handNumber);
+                        } while (handNumber < lowerBound | handNumber > upperBound);
+                        //eat food in selected hand
+                        customer.eatFood(handNumber - 1);
                     } //end if
                     break;
                 case 9: //leave Carnival 
@@ -139,7 +150,7 @@ public class Carnival
             {
                 customer.addPrize(prizeWon);
             }   
-        } while (playAgain); //end do while
+        } while (playAgain); //end do while game loop
         
         //exit Carnival
         System.out.printf("\nAll Done! Hope you had a great time, %s\n", 
