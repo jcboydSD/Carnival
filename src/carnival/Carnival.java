@@ -215,7 +215,11 @@ public class Carnival
             System.out.print("Which one do you want? ");
             choice = stdIn.nextInt();
             stdIn.nextLine(); //flush new line
-        } while (choice < 1 && choice > 4); //check for valid input
+            if (choice < 1 | choice > 4)
+            {
+                System.out.println("Please enter a valid option");
+            }
+        } while (choice < 1 | choice > 4); //check for valid input
         return choice - 1;
     } //end foodChoice
     
