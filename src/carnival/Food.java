@@ -26,6 +26,6 @@ public class Food
     public int getTicketPrice()
     {
         return ticketPrice;
-    }
+    } //end getTicketPrice
  
 } //end class Food

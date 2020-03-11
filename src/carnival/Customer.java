@@ -85,12 +85,12 @@ public class Customer
         } //end if
     } //end addFood
     
-    public String getLeftHand()
+    public String getHand1()
     {
         return hands[0];   
     } //end getLeftHand
     
-    public String getRightHand()
+    public String getHand2()
     {
         return hands[1];   
     } //end getRightHand

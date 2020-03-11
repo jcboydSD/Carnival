@@ -103,27 +103,27 @@ public class Carnival
                 case 8: //eat food
                     //customer checks for food currently in hands
                     int lowerBound = 1, upperBound = 2;
-                    if (customer.getLeftHand().equals("empty") 
-                            && customer.getRightHand().equals("empty"))
+                    if (customer.getHand1().equals("empty") 
+                            && customer.getHand2().equals("empty"))
                     {
                         System.out.println("You don't have any food to eat!");
                     }
                     else 
                     {    
-                        if (customer.getLeftHand().equals("empty"))
+                        if (customer.getHand1().equals("empty"))
                         {
-                            System.out.printf("2. %-12s\n", customer.getRightHand());
+                            System.out.printf("2. %-12s\n", customer.getHand2());
                             lowerBound = 2; //adjust for input validation 
                         }
-                        else if (customer.getRightHand().equals("empty"))
+                        else if (customer.getHand2().equals("empty"))
                         {
-                            System.out.printf("1. %-12s\n", customer.getLeftHand());
+                            System.out.printf("1. %-12s\n", customer.getHand1());
                             upperBound = 1; //adjust for input validation
                         }
                         else
                         {
                             System.out.printf("1. %-12s 2. %-12s\n", 
-                                customer.getLeftHand(), customer.getRightHand());
+                                customer.getHand1(), customer.getHand2());
                         } //end if
                         do
                         {
@@ -136,7 +136,7 @@ public class Carnival
                             } //end if
                         } while (handNumber < lowerBound | handNumber > upperBound);
                         //eat food in selected hand
-                        customer.eatFood(handNumber - 1);
+                        customer.eatFood(handNumber - 1); //adjust to index
                     } //end if
                     break;
                 case 9: //leave Carnival 
